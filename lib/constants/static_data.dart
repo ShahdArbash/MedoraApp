@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:medoraapp/features/analysis/presentation/view/analysis_scope.dart';
+import 'package:medoraapp/features/analysis/presentation/view/AnalysisCategoryView/analysis_scope.dart';
 import 'package:medoraapp/l10n/app_localizations.dart';
 import 'package:medoraapp/presentation/Widgets/Home_View_Widgets/service_tile.dart';
 
@@ -11,7 +11,7 @@ List<ServiceTile> getListServices(BuildContext context) {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => const AnalysisScopeView()),
+          MaterialPageRoute(builder: (_) => AnalysisScopeView()),
         );
       },
     ),

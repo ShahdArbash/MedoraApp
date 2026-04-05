@@ -17,6 +17,8 @@ class AnalysisCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: AppColors.whiteColor,
+      elevation: 0.1,
       margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Column(
@@ -60,13 +62,12 @@ class AnalysisCard extends StatelessWidget {
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: const [
+                    children: [
                       Text(
                         'عرض المخابر',
-                        style: TextStyle(
-                          color: Color(0xFF00AFB4),
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                        style: CairoFonts.bold(
+                          color: AppColors.primaryColor,
+                          fontSize: 12,
                         ),
                       ),
                       SizedBox(width: 4),

@@ -7,6 +7,7 @@ class PromotionsCubit extends Cubit<PromotionsState> {
   PromotionsCubit() : super(PromotionsInitial());
 
   Future<void> fetchPromotions() async {
+    if (isClosed) return;
     emit(PromotionsLoading());
 
     await Future.delayed(const Duration(seconds: 2));
@@ -29,7 +30,7 @@ class PromotionsCubit extends Cubit<PromotionsState> {
         description: "جرب منتجنا الجديد الآن!",
       ),
     ];
-
+    if (isClosed) return;
     emit(PromotionsSuccessful(promotions: promotions));
   }
 }

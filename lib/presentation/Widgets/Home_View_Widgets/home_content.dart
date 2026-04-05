@@ -24,11 +24,6 @@ class HomeContent extends StatelessWidget {
           Row(children: getListServices(context)),
 
           const SizedBox(height: 24),
-
-          AnalysisCard(
-            title: 'تحليل صورة الدم كاملة (CBC)',
-            subtitle: 'فحص شامل لخلايا الدم الحمراء والبيضاء والصفائح الدموية',
-          ),
         ],
       ),
     );

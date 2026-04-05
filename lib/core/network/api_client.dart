@@ -6,13 +6,11 @@ class ApiClient {
   ApiClient()
     : dio = Dio(
         BaseOptions(
-          baseUrl: 'https://www.ushare.vip/medora/api/',
-          connectTimeout: const Duration(seconds: 15),
-          receiveTimeout: const Duration(seconds: 15),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
+          baseUrl: "https://your-api.com/api/",
+          connectTimeout: const Duration(seconds: 10),
+          receiveTimeout: const Duration(seconds: 10),
         ),
-      );
+      ) {
+    dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
+  }
 }

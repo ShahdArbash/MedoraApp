@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medoraapp/constants/assets.dart';
-import 'package:medoraapp/features/analysis/presentation/view/analysis_scope.dart';
+import 'package:medoraapp/features/analysis/presentation/view/AnalysisCategoryView/analysis_scope.dart';
 import 'package:medoraapp/presentation/Widgets/Buttons/main_bottom_nav_bar.dart';
 import 'package:medoraapp/presentation/Widgets/Home_View_Widgets/home_app_bar%20.dart';
 import 'package:medoraapp/presentation/Widgets/Home_View_Widgets/home_content.dart';
@@ -26,7 +26,7 @@ class _HomeViewState extends State<HomeView> {
 
   final List<Widget> _pages = [
     const HomeContent(),
-    const AnalysisScopeView(),
+    AnalysisScopeView(),
     const AppointmentsView(),
     const ProfileView(),
   ];

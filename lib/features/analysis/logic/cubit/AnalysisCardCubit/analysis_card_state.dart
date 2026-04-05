@@ -1,4 +1,4 @@
-part of 'analysis_cubit.dart';
+import '../../../data/models/analysis_model.dart';
 
 abstract class AnalysisState {}
 
@@ -6,10 +6,10 @@ class AnalysisInitial extends AnalysisState {}
 
 class AnalysisLoading extends AnalysisState {}
 
-class AnalysisLoaded extends AnalysisState {
-  final List<AnalysisCategoryModel> categories;
+class AnalysisSuccess extends AnalysisState {
+  final List<AnalysisModel> analyses;
 
-  AnalysisLoaded(this.categories);
+  AnalysisSuccess(this.analyses);
 }
 
 class AnalysisError extends AnalysisState {
