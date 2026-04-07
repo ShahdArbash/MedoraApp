@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:medoraapp/constants/static_data.dart';
-
-import '../../../features/analysis/presentation/widgets/analysis_card.dart';
 import '../../scopes/promotions_scope.dart';
 
 class HomeContent extends StatelessWidget {

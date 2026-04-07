@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:medoraapp/constants/fonts.dart';
 import 'package:medoraapp/features/analysis/data/models/analysis_category_model.dart';
 import 'package:medoraapp/features/analysis/logic/cubit/AnalysisCardCubit/analysis_card_cubit.dart';
 import 'package:medoraapp/features/analysis/logic/cubit/AnalysisCardCubit/analysis_card_state.dart';
-import 'package:medoraapp/features/analysis/presentation/widgets/analysis_card.dart';
+import 'package:medoraapp/features/analysis/presentation/view/AnalysisLabsView/analysis_labs_scope_view.dart';
+import 'package:medoraapp/features/analysis/presentation/widgets/AnalysisCard/analysis_list_skeleton.dart';
+import 'package:medoraapp/features/analysis/presentation/widgets/AnalysisCard/count_badge.dart';
+import 'package:medoraapp/features/analysis/presentation/widgets/AnalysisCard/analysis_card.dart';
+import 'package:medoraapp/features/analysis/presentation/widgets/AnalysisCard/search_field.dart';
+import 'package:medoraapp/features/analysis/presentation/widgets/app_custom_app_bar.dart';
+import 'package:medoraapp/presentation/Widgets/AppSkeleton/search_skeleton.dart';
 
 class AnalysisListView extends StatelessWidget {
   final AnalysisCategoryModel category;
@@ -13,39 +18,70 @@ class AnalysisListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(category.title, style: CairoFonts.bold(fontSize: 14)),
-      ),
-      body: BlocBuilder<AnalysisCubit, AnalysisState>(
-        builder: (context, state) {
-          if (state is AnalysisLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppCustomAppBar(
+          title: category.title,
+          trailing: CountBadge(count: category.testsCount, label: 'تحليل'),
+        ),
+        body: Column(
+          children: [
+            Divider(),
 
-          if (state is AnalysisError) {
-            return Center(child: Text(state.message));
-          }
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: AppSearchField(
+                hint: "ابحث عن تحليل...",
+                onChanged: (value) {
+                  // context.read<AnalysisCubit>().search(value);
+                },
+              ),
+            ),
 
-          if (state is AnalysisSuccess) {
-            return ListView.builder(
-              itemCount: state.analyses.length,
-              itemBuilder: (context, index) {
-                final item = state.analyses[index];
+            Expanded(
+              child: BlocBuilder<AnalysisCubit, AnalysisState>(
+                builder: (context, state) {
+                  if (state is AnalysisLoading) {
+                    return Column(
+                      children: const [Expanded(child: AnalysisListSkeleton())],
+                    );
+                  }
 
-                return AnalysisCard(
-                  title: item.name,
-                  subtitle: item.description,
-                  onTap: () {
-                    // لاحقاً: عرض المخابر
-                  },
-                );
-              },
-            );
-          }
+                  if (state is AnalysisError) {
+                    return Center(child: Text(state.message));
+                  }
 
-          return const SizedBox();
-        },
+                  if (state is AnalysisSuccess) {
+                    return ListView.builder(
+                      itemCount: state.analyses.length,
+                      itemBuilder: (context, index) {
+                        final item = state.analyses[index];
+
+                        return AnalysisCard(
+                          title: item.name,
+                          subtitle: item.description,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => AnalysisLabsScopeView(
+                                  analysisId: item.id,
+                                  analysisName: item.name,
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  }
+
+                  return const SizedBox();
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

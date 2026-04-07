@@ -45,8 +45,8 @@ class AnalysisCategoryBaseCard extends StatelessWidget {
                 ),
                 child: Icon(
                   category.iconData,
-                  color: AppColors.IconColor,
-                  size: 20,
+                  color: AppColors.IconColor.withValues(alpha: 0.85),
+                  size: 32,
                 ),
               ),
               const SizedBox(height: 12),

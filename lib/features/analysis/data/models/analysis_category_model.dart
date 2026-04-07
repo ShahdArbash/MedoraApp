@@ -4,15 +4,13 @@ class AnalysisCategoryModel {
   final String title;
   final int id;
   final int testsCount;
-  final int iconCode;
-  final String iconFamily;
+  final String iconName;
 
   const AnalysisCategoryModel({
     required this.title,
     required this.id,
     required this.testsCount,
-    required this.iconCode,
-    required this.iconFamily,
+    required this.iconName,
   });
 
   factory AnalysisCategoryModel.fromJson(Map<String, dynamic> json) {
@@ -20,35 +18,39 @@ class AnalysisCategoryModel {
       title: json['name'] ?? '',
       id: json['id'] ?? 0,
       testsCount: json['tests_count'] ?? 0,
-      iconCode: _parseIconCode(json['icon_code']),
-      iconFamily: json['icon_family'] ?? 'MaterialIcons',
+      iconName: json['icon'] ?? 'science', // 👈 fallback
     );
   }
 
-  // 🔥 fallback ثابت
-  static const int _defaultIconCode = 0xe3af;
+  // 🔥 تحويل الاسم إلى IconData
+  IconData get iconData => _mapIcon(iconName);
 
-  // 🔥 parsing آمن ويدعم hex
-  static int _parseIconCode(dynamic value) {
-    if (value is int) return value;
-
-    if (value is String) {
-      try {
-        return int.parse(value);
-      } catch (_) {
-        return _defaultIconCode;
-      }
+  static IconData _mapIcon(String name) {
+    switch (name) {
+      case 'bloodtype':
+        return Icons.bloodtype;
+      case 'science':
+        return Icons.science;
+      case 'biotech':
+        return Icons.biotech;
+      case 'coronavirus':
+        return Icons.coronavirus;
+      case 'water_drop':
+        return Icons.water_drop;
+      case 'medical_services':
+        return Icons.medical_services;
+      case 'shield':
+        return Icons.shield;
+      case 'diamond':
+        return Icons.diamond;
+      case 'favorite':
+        return Icons.favorite;
+      case 'child_care':
+        return Icons.child_care;
+      case 'healing':
+        return Icons.healing;
+      default:
+        return Icons.science; // 👈 fallback
     }
-
-    return _defaultIconCode;
-  }
-
-  // 🔥 IconData جاهزة
-  IconData get iconData => IconData(iconCode, fontFamily: iconFamily);
-
-  // 🔥 مفيد للـ debugging
-  @override
-  String toString() {
-    return 'AnalysisCategory(id: $id, title: $title)';
   }
 }

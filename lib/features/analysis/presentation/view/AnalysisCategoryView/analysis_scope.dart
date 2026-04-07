@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:medoraapp/features/analysis/presentation/view/AnalysisCategoryView/analysis_view.dart';
+import 'package:medoraapp/features/analysis/presentation/view/AnalysisCategoryView/analysis_category_view.dart';
 
 import '../../../logic/cubit/AnalysisCategoryCubit/analysis_category_cubit.dart';
 import '../../../data/service/analysis_category_service.dart';
