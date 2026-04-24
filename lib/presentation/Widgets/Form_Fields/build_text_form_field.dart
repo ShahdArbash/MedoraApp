@@ -6,6 +6,7 @@ class BuildTextFormField extends StatelessWidget {
     required this.labelText,
     required this.icon,
     this.obscurePassword = false,
+    this.keyboardType,
     this.validator,
     this.onSaved,
     this.suffixIcon,
@@ -15,6 +16,7 @@ class BuildTextFormField extends StatelessWidget {
     this.showErrorNotifier,
     this.controller,
   });
+  final TextInputType? keyboardType;
 
   final String labelText;
   final IconData icon;
@@ -46,6 +48,7 @@ class BuildTextFormField extends StatelessWidget {
           : suffixIcon;
 
       return TextFormField(
+        keyboardType: keyboardType,
         controller: controller,
         focusNode: focusNode,
         obscureText: obscurePassword,

@@ -51,24 +51,16 @@ class _ChatViewState extends State<ChatView> {
             Expanded(
               child: BlocConsumer<ChatCubit, ChatState>(
                 listener: (context, state) {
-                  if (state is ChatSuccess) {
+                  if (state is ChatSuccessState) {
                     messages.add(state.message);
                     scrollToBottom();
                   }
-                  if (state is ChatFailure) {
+                  if (state is ChatFailureState) {
                     final l10n = AppLocalizations.of(context)!;
-                    final text = switch (state.reason) {
-                      ChatFailureReason.configuration =>
-                        l10n.configurationError,
-                      ChatFailureReason.network => l10n.networkError,
-                      ChatFailureReason.quotaExceeded => l10n.quotaExceeded,
-                      ChatFailureReason.emptyResponse =>
-                        l10n.emptyResponseError,
-                      ChatFailureReason.unknown => l10n.unexpectedError,
-                    };
+
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(text),
+                        content: Text(state.message),
                         backgroundColor: Colors.red,
                       ),
                     );
@@ -80,12 +72,12 @@ class _ChatViewState extends State<ChatView> {
                       messages: messages,
                       scrollController: scrollController,
                     );
-                  } else if (state is ChatSuccess) {
+                  } else if (state is ChatSuccessState) {
                     return ChatListView(
                       messages: messages,
                       scrollController: scrollController,
                     );
-                  } else if (state is ChatFailure) {
+                  } else if (state is ChatFailureState) {
                     return FailureChatListView(
                       messages: messages,
                       scrollController: scrollController,

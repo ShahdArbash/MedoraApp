@@ -1,39 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:medoraapp/presentation/Widgets/Form_Fields/password_field.dart';
+import 'package:medoraapp/l10n/app_localizations.dart';
+import 'package:medoraapp/presentation/Widgets/Form_Fields/base_password_field.dart';
 import 'password_rules_indicator.dart';
 
 class PasswordFieldWithRules extends StatefulWidget {
   const PasswordFieldWithRules({
     super.key,
-    required this.onSaved,
-    this.controller,
+    required this.controller,
+    required this.validator,
   });
 
-  final void Function(String?) onSaved;
-  final TextEditingController? controller;
+  final TextEditingController controller;
+  final String? Function(String?) validator;
 
   @override
   State<PasswordFieldWithRules> createState() => _PasswordFieldWithRulesState();
 }
 
 class _PasswordFieldWithRulesState extends State<PasswordFieldWithRules> {
-  final ValueNotifier<String> _passwordNotifier = ValueNotifier('');
+  final ValueNotifier<String> _password = ValueNotifier('');
   final FocusNode _focusNode = FocusNode();
-  bool _hasFocus = false;
+
+  bool _showRules = false;
 
   @override
   void initState() {
     super.initState();
+
     _focusNode.addListener(() {
       setState(() {
-        _hasFocus = _focusNode.hasFocus;
+        _showRules = _focusNode.hasFocus;
       });
     });
   }
 
   @override
   void dispose() {
-    _passwordNotifier.dispose();
+    _password.dispose();
     _focusNode.dispose();
     super.dispose();
   }
@@ -42,23 +45,23 @@ class _PasswordFieldWithRulesState extends State<PasswordFieldWithRules> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        PasswordField(
+        BasePasswordField(
           controller: widget.controller,
-          onSaved: widget.onSaved,
           focusNode: _focusNode,
-          onChanged: (value) {
-            _passwordNotifier.value = value;
-          },
+
+          validator: widget.validator,
+          onChanged: (value) => _password.value = value,
+
+          labelText: AppLocalizations.of(context)!.password,
         ),
+
         const SizedBox(height: 8),
+
         AnimatedSwitcher(
           duration: const Duration(milliseconds: 250),
-          child: _hasFocus
-              ? PasswordRulesIndicator(
-                  key: const ValueKey('rules'),
-                  password: _passwordNotifier,
-                )
-              : const SizedBox.shrink(key: ValueKey('empty')),
+          child: _showRules
+              ? PasswordRulesIndicator(password: _password)
+              : const SizedBox.shrink(),
         ),
       ],
     );

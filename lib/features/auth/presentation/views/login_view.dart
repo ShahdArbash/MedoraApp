@@ -1,76 +1,94 @@
-import 'package:medoraapp/features/auth/logic/Cubits/cubit_login/login_cubit.dart';
-import 'package:medoraapp/features/auth/data/services/api_service.dart';
-import 'package:medoraapp/features/auth/data/services/auth_service.dart';
-import 'package:medoraapp/l10n/app_localizations.dart';
-import 'package:medoraapp/features/auth/presentation/widgets/Login_View_Widgets/google_sign_in_widget.dart';
-import 'package:medoraapp/presentation/Widgets/Buttons/register_button.dart';
-import '../../../../presentation/Widgets/Methods/build_background_view.dart';
-import '../../../../presentation/Widgets/Form_Fields/email_field.dart';
-import '../widgets/Login_View_Widgets/forgot_password.dart';
-import '../../../../presentation/Widgets/Buttons/login_button_action.dart';
-import '../../../../presentation/Widgets/Form_Fields/password_field.dart';
-import '../../../../presentation/Widgets/Texts/title_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:medoraapp/core/validators/email_validator.dart';
+import 'package:medoraapp/core/validators/password_validator.dart';
+import 'package:medoraapp/features/auth/data/models/login_request.dart';
+import 'package:medoraapp/features/auth/logic/Cubits/cubit_login/login_cubit.dart';
+import 'package:medoraapp/l10n/app_localizations.dart';
 
-class LoginView extends StatelessWidget {
-  LoginView({super.key});
+import '../../../../presentation/Widgets/Methods/build_background_view.dart';
+import '../../../../presentation/Widgets/Form_Fields/email_field.dart';
+import '../../../../presentation/Widgets/Form_Fields/password_field.dart';
+import '../../../../presentation/Widgets/Buttons/login_button_action.dart';
+import '../../../../presentation/Widgets/Buttons/register_button.dart';
+import '../../../../presentation/Widgets/Texts/title_text.dart';
+import '../widgets/Login_View_Widgets/forgot_password.dart';
+import '../widgets/Login_View_Widgets/google_sign_in_widget.dart';
+
+class LoginView extends StatefulWidget {
+  const LoginView({super.key});
+
+  @override
+  State<LoginView> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
-  String _email = '';
-  String _password = '';
+
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   void _submit(BuildContext context) {
     if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-
-      context.read<LoginCubit>().login(
-        email: _email.trim().toLowerCase(),
-        password: _password.trim(),
+      final request = LoginRequest(
+        email: _emailController.text.trim().toLowerCase(),
+        password: _passwordController.text.trim(),
       );
+
+      context.read<LoginCubit>().login(request);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: Container(
-        height: MediaQuery.of(context).size.height,
         decoration: BiuldBackgroundView(),
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: SafeArea(
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Welcome Text
-                  TitleText(title: AppLocalizations.of(context)!.welcomeBack),
+                  TitleText(title: l10n.welcomeBack),
                   const SizedBox(height: 65),
-                  // Login Form Card
+
                   Form(
                     key: _formKey,
                     child: Column(
                       children: [
-                        // Email Field
-                        EmailField(onSaved: (value) => _email = value ?? ''),
-                        const SizedBox(height: 20),
-                        // Password
-                        PasswordField(
-                          onSaved: (value) => _password = value ?? '',
+                        EmailField(
+                          controller: _emailController,
+                          validator: (v) => emailValidator(v, context),
                         ),
-                        // Forgot Password
+
+                        const SizedBox(height: 20),
+
+                        PasswordField(controller: _passwordController),
+
+                        const SizedBox(height: 10),
+
                         ForgotPassword(),
+
                         const SizedBox(height: 5),
-                        // Login Button
-                        LoginButtonAction(
-                          formKey: _formKey,
-                          onSubmit: () => _submit(context),
-                        ),
+
+                        LoginButtonAction(onSubmit: () => _submit(context)),
+
                         const SizedBox(height: 20),
-                        // Register Button
+
                         RegisterButton(),
+
                         const SizedBox(height: 30),
-                        // Google Sign In Widget
+
                         const GoogleSignInWidget(),
                       ],
                     ),

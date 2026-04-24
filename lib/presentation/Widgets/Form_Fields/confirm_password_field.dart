@@ -1,79 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:medoraapp/l10n/app_localizations.dart';
-import 'package:medoraapp/core/validators/confirm_password_validator.dart';
-import 'base_password_field.dart';
+import 'package:medoraapp/presentation/Widgets/Form_Fields/base_password_field.dart';
 
-class ConfirmPasswordField extends StatefulWidget {
+class ConfirmPasswordField extends StatelessWidget {
   const ConfirmPasswordField({
     super.key,
+    required this.controller,
     required this.passwordController,
-    required this.onSaved,
-    this.controller,
+    required this.validator,
   });
 
+  final TextEditingController controller;
   final TextEditingController passwordController;
-  final void Function(String?) onSaved;
-  final TextEditingController? controller;
-
-  @override
-  State<ConfirmPasswordField> createState() => _ConfirmPasswordFieldState();
-}
-
-class _ConfirmPasswordFieldState extends State<ConfirmPasswordField> {
-  final ValueNotifier<String?> _errorNotifier = ValueNotifier(null);
-  final FocusNode _focusNode = FocusNode();
-  final ValueNotifier<bool> _showErrorNotifier = ValueNotifier(false);
-
-  @override
-  void initState() {
-    super.initState();
-    _focusNode.addListener(() {
-      _showErrorNotifier.value = _focusNode.hasFocus;
-    });
-    widget.passwordController.addListener(_onPasswordChanged);
-  }
-
-  @override
-  void dispose() {
-    _errorNotifier.dispose();
-    _focusNode.dispose();
-    _showErrorNotifier.dispose();
-    widget.passwordController.removeListener(_onPasswordChanged);
-    super.dispose();
-  }
-
-  void _onPasswordChanged() {
-    // Re-validate confirm password when password changes
-    if (widget.controller != null && widget.controller!.text.isNotEmpty) {
-      _errorNotifier.value = confirmPasswordValidator(
-        widget.controller!.text,
-        widget.passwordController.text,
-        context,
-      );
-    }
-  }
+  final String? Function(String?) validator;
 
   @override
   Widget build(BuildContext context) {
     return BasePasswordField(
+      icon: Icons.lock_outline,
+      controller: controller,
+
+      validator: validator,
+
       labelText: AppLocalizations.of(context)!.confirmPassword,
-      onSaved: widget.onSaved,
-      validator: (value) => confirmPasswordValidator(
-        value,
-        widget.passwordController.text,
-        context,
-      ),
-      onChanged: (value) {
-        _errorNotifier.value = confirmPasswordValidator(
-          value,
-          widget.passwordController.text,
-          context,
-        );
-      },
-      errorNotifier: _errorNotifier,
-      showErrorNotifier: _showErrorNotifier,
-      focusNode: _focusNode,
-      controller: widget.controller,
     );
   }
 }

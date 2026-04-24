@@ -26,7 +26,7 @@ class _ChatInputFieldState extends State<ChatInputField> {
   void send() {
     final text = _controller.text.trim();
     if (text.isNotEmpty) {
-      if (context.read<ChatCubit>().state is ChatFailure) {
+      if (context.read<ChatCubit>().state is ChatFailureState) {
         widget.messages.removeLast();
       }
       widget.messages.add(

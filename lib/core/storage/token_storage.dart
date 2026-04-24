@@ -1,20 +1,47 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class TokenStorage {
-  static const _tokenKey = 'auth_token';
+  static const _storage = FlutterSecureStorage();
 
-  static Future<void> saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_tokenKey, token);
+  static const _accessTokenKey = 'access_token';
+  static const _refreshTokenKey = 'refresh_token';
+
+  // 🔐 حفظ التوكنات
+  static Future<void> saveTokens({
+    required String accessToken,
+    // required String refreshToken,
+  }) async {
+    await _storage.write(key: _accessTokenKey, value: accessToken);
+    // await _storage.write(key: _refreshTokenKey, value: refreshToken);
   }
 
+  // 🔑 جلب access token
   static Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(_tokenKey);
+    return await _storage.read(key: _accessTokenKey);
   }
 
-  static Future<void> clearToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_tokenKey);
+  // 🔄 جلب refresh token
+  static Future<String?> getRefreshToken() async {
+    return await _storage.read(key: _refreshTokenKey);
+  }
+
+  // 🚪 تسجيل خروج
+  static Future<void> clearAll() async {
+    await _storage.delete(key: _accessTokenKey);
+    await _storage.delete(key: _refreshTokenKey);
+  }
+
+  // ✅ هل المستخدم مسجل؟
+  static Future<bool> isLoggedIn() async {
+    final token = await _storage.read(key: _accessTokenKey);
+    return token != null;
+  }
+
+  static Future<void> clearAccessToken() async {
+    await _storage.delete(key: _accessTokenKey);
+  }
+
+  static Future<void> updateAccessToken(String token) async {
+    await _storage.write(key: _accessTokenKey, value: token);
   }
 }

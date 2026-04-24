@@ -6,7 +6,8 @@ class BasePasswordField extends StatefulWidget {
     super.key,
     required this.labelText,
     required this.validator,
-    required this.onSaved,
+    this.icon,
+
     this.focusNode,
     this.onChanged,
     this.errorNotifier,
@@ -16,7 +17,7 @@ class BasePasswordField extends StatefulWidget {
 
   final String labelText;
   final String? Function(String?) validator;
-  final void Function(String?) onSaved;
+  final IconData? icon;
   final FocusNode? focusNode;
   final ValueChanged<String>? onChanged;
   final ValueNotifier<String?>? errorNotifier;
@@ -40,10 +41,10 @@ class _BasePasswordFieldState extends State<BasePasswordField> {
   Widget build(BuildContext context) {
     return BuildTextFormField(
       labelText: widget.labelText,
-      icon: Icons.lock,
+      icon: widget.icon ?? Icons.lock_outline,
       obscurePassword: _obscurePassword,
       validator: widget.validator,
-      onSaved: widget.onSaved,
+
       onChanged: widget.onChanged,
       errorNotifier: widget.errorNotifier,
       showErrorNotifier: widget.showErrorNotifier,

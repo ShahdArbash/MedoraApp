@@ -3,6 +3,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:medoraapp/core/theme/app_theme.dart';
 import 'package:medoraapp/l10n/app_localizations.dart';
 import 'package:medoraapp/presentation/views/home_view.dart';
+import 'package:medoraapp/presentation/views/splash_view.dart';
 
 void main() {
   runApp(const MedoraAPP());
@@ -28,7 +29,7 @@ class MedoraAPP extends StatelessWidget {
 
       theme: AppTheme.theme,
 
-      home: HomeView(),
+      home: SplashView(),
     );
   }
 }

@@ -1,4 +1,6 @@
 class BookingData {
+  final int labId;
+  final int analysisId;
   final String analysisName;
   final String labName;
   final double price;
@@ -6,6 +8,8 @@ class BookingData {
   final String? duration;
 
   BookingData({
+    required this.labId,
+    required this.analysisId,
     required this.analysisName,
     required this.labName,
     required this.price,

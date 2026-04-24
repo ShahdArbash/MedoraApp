@@ -9,6 +9,7 @@ class AnalysisCategoryCubit extends Cubit<AnalysisCategoryState> {
   final AnalysisCategoryService service;
 
   AnalysisCategoryCubit({required this.service}) : super(AnalysisInitial());
+
   Future<void> getCategories() async {
     if (isClosed) return;
 
@@ -17,29 +18,17 @@ class AnalysisCategoryCubit extends Cubit<AnalysisCategoryState> {
     try {
       final data = await service.fetchCategories();
 
-      if (isClosed) return; // 👈 أهم سطر
+      if (isClosed) return;
 
       emit(AnalysisLoaded(data));
     } on ApiException catch (e) {
       if (isClosed) return;
 
-      switch (e.type) {
-        case ApiExceptionType.network:
-          emit(AnalysisError("تحقق من اتصال الإنترنت"));
-          break;
-
-        case ApiExceptionType.server:
-          emit(AnalysisError("خطأ في السيرفر"));
-          break;
-
-        case ApiExceptionType.unknown:
-          emit(AnalysisError("حدث خطأ غير متوقع"));
-          break;
-      }
+      emit(AnalysisError(e.userMessage));
     } catch (_) {
       if (isClosed) return;
 
-      emit(AnalysisError("خطأ غير معروف"));
+      emit(AnalysisError("Something went wrong"));
     }
   }
 }

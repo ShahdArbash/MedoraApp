@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:medoraapp/core/error/api_exception.dart';
-import 'package:medoraapp/features/auth/auth_failure_reason.dart';
+import 'package:medoraapp/features/auth/data/models/login_request.dart';
 import 'package:medoraapp/features/auth/data/models/login_response_model.dart';
 import 'package:medoraapp/features/auth/data/services/auth_service.dart';
 
@@ -11,24 +11,16 @@ class LoginCubit extends Cubit<LoginState> {
 
   LoginCubit(this.authService) : super(LoginInitial());
 
-  Future<void> login({required String email, required String password}) async {
+  Future<void> login(LoginRequest request) async {
     emit(LoginLoading());
 
     try {
-      final response = await authService.loginPatient(
-        email: email,
-        password: password,
-      );
-
-      if (response.isSuccess) {
-        emit(LoginSuccess(response));
-      } else {
-        emit(LoginError(mapAuthFailureReason(serverMessage: response.message)));
-      }
+      final response = await authService.login(request);
+      emit(LoginSuccess(response));
     } on ApiException catch (e) {
-      emit(LoginError(mapAuthFailureReason(exception: e)));
-    } catch (e) {
-      emit(LoginError(AuthFailureReason.unknown));
+      emit(LoginError(e.userMessage));
+    } catch (_) {
+      emit(LoginError("Something went wrong"));
     }
   }
 }

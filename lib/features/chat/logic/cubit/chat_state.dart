@@ -2,28 +2,16 @@ import 'package:medoraapp/features/chat/data/models/message_model.dart';
 
 abstract class ChatState {}
 
-class ChatInitial extends ChatState {}
+class ChatInitialState extends ChatState {}
 
-class ChatLoading extends ChatState {
-  ChatLoading();
-}
+class ChatLoading extends ChatState {}
 
-class ChatSuccess extends ChatState {
+class ChatSuccessState extends ChatState {
   final MessageModel message;
-
-  ChatSuccess({required this.message});
+  ChatSuccessState({required this.message});
 }
 
-enum ChatFailureReason {
-  configuration,
-  network,
-  quotaExceeded,
-  emptyResponse,
-  unknown,
-}
-
-class ChatFailure extends ChatState {
-  final ChatFailureReason reason;
-
-  ChatFailure({required this.reason});
+class ChatFailureState extends ChatState {
+  final String message;
+  ChatFailureState(this.message);
 }

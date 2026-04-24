@@ -5,19 +5,20 @@ import 'package:medoraapp/features/analysis/presentation/widgets/app_info_row.da
 import 'package:medoraapp/features/analysis/presentation/widgets/app_primary_button.dart';
 import 'package:medoraapp/features/analysis/presentation/widgets/offer_badge.dart';
 import 'package:medoraapp/features/analysis/presentation/widgets/price_text.dart';
+import 'package:medoraapp/features/appointment/presentation/view/book_appointment_view.dart';
 import '../../../../../constants/fonts.dart';
 import '../../../data/models/analysis_lab_model.dart';
 
 class AnalysisLabCard extends StatelessWidget {
   final AnalysisLabModel lab;
   final String analysisName;
-  final VoidCallback? onBook;
+  final VoidCallback onBook;
 
   const AnalysisLabCard({
     super.key,
     required this.lab,
     required this.analysisName,
-    this.onBook,
+    required this.onBook,
   });
 
   @override
@@ -70,20 +71,7 @@ class AnalysisLabCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: 10),
-            AppPrimaryButton(
-              text: "احجز الآن",
-              onPressed: () {
-                final booking = BookingData(
-                  analysisName: analysisName,
-                  labName: lab.labName,
-                  price: lab.price,
-                  location: lab.location,
-                  duration: lab.duration,
-                );
-
-                onBook?.call();
-              },
-            ),
+            AppPrimaryButton(text: "احجز الآن", onPressed: onBook),
           ],
         ),
       ),
