@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:medoraapp/constants/assets.dart';
+import 'package:medoraapp/core/network/api_client.dart';
 import 'package:medoraapp/features/analysis/presentation/view/AnalysisCardView/analysis_list_scope_view.dart';
-import 'package:medoraapp/features/analysis/presentation/view/AnalysisCategoryView/analysis_scope.dart';
 import 'package:medoraapp/features/appointments/presentation/views/Appointments_scope_view.dart';
+import 'package:medoraapp/features/setting&profile/presentation/view/setting_scope_view.dart';
 import 'package:medoraapp/presentation/Widgets/Buttons/main_bottom_nav_bar.dart';
 import 'package:medoraapp/presentation/Widgets/Home_View_Widgets/home_app_bar%20.dart';
 import 'package:medoraapp/presentation/Widgets/Home_View_Widgets/home_content.dart';
-import 'package:medoraapp/features/setting/presentation/view/setting_view.dart';
 
 import '../../features/chat/chat_scope.dart';
 
@@ -22,11 +22,11 @@ class _HomeViewState extends State<HomeView> {
 
   final PageController _pageController = PageController();
 
-  final List<Widget> _pages = [
+  List<Widget> get pages => [
     const HomeContent(),
     const AnalysisListScopeView(),
     const AppointmentsScopeView(),
-    const SettingView(),
+    SettingScopeView(apiClient: ApiClient()),
   ];
   void goToHomeTab() {
     _pageController.jumpToPage(0);
@@ -66,7 +66,7 @@ class _HomeViewState extends State<HomeView> {
       body: PageView(
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
-        children: _pages,
+        children: pages,
       ),
 
       bottomNavigationBar: Padding(

@@ -4,32 +4,67 @@ class AppCard extends StatelessWidget {
   final Widget top;
   final Widget? bottom;
 
-  const AppCard({super.key, required this.top, this.bottom});
+  final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
+
+  final bool isSelected;
+  final Widget? selectionWidget;
+
+  const AppCard({
+    super.key,
+    required this.top,
+    this.bottom,
+    this.onTap,
+    this.onLongPress,
+    this.isSelected = false,
+    this.selectionWidget,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14),
-        side: BorderSide(color: Colors.grey.withValues(alpha: 0.2)),
-      ),
-
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: onTap,
+      onLongPress: onLongPress,
+      child: Stack(
         children: [
-          /// 🔹 القسم العلوي
-          Padding(padding: const EdgeInsets.all(16), child: top),
+          Card(
+            elevation: 0,
+            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+              side: BorderSide(
+                color: isSelected
+                    ? Theme.of(context).colorScheme.primary
+                    : Colors.grey.withValues(alpha: 0.2),
+                width: isSelected ? 2 : 1,
+              ),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(padding: const EdgeInsets.all(16), child: top),
 
-          /// 🔹 الخط الفاصل (يظهر فقط إذا في bottom)
-          if (bottom != null) const Divider(height: 1),
+                if (bottom != null) const Divider(height: 1),
 
-          /// 🔹 القسم السفلي
-          if (bottom != null)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: bottom!,
+                if (bottom != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: bottom!,
+                  ),
+              ],
+            ),
+          ),
+
+          if (isSelected)
+            Positioned(
+              top: 18,
+              left: 24,
+              child:
+                  selectionWidget ??
+                  const CircleAvatar(
+                    radius: 12,
+                    child: Icon(Icons.check, size: 16),
+                  ),
             ),
         ],
       ),

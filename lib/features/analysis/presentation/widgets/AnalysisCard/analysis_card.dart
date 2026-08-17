@@ -6,13 +6,26 @@ import 'package:medoraapp/features/analysis/presentation/widgets/app_card_base.d
 
 class AnalysisCard extends StatelessWidget {
   final AnalysisModel analysis;
-  final VoidCallback? onTap;
 
-  const AnalysisCard({super.key, required this.analysis, this.onTap});
+  final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
+  final bool isSelected;
+
+  const AnalysisCard({
+    super.key,
+    required this.analysis,
+    this.onTap,
+    this.onLongPress,
+    this.isSelected = false,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppCard(
+      onTap: onTap,
+      onLongPress: onLongPress,
+      isSelected: isSelected,
+
       top: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

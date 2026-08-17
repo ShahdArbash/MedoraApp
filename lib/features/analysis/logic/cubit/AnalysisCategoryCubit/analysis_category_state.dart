@@ -2,18 +2,18 @@ part of 'analysis_category_cubit.dart';
 
 abstract class AnalysisCategoryState {}
 
-class AnalysisInitial extends AnalysisCategoryState {}
+class AnalysisCategoryInitial extends AnalysisCategoryState {}
 
-class AnalysisLoading extends AnalysisCategoryState {}
+class AnalysisCategoryLoading extends AnalysisCategoryState {}
 
-class AnalysisLoaded extends AnalysisCategoryState {
+class AnalysisCategorySuccess extends AnalysisCategoryState {
   final List<AnalysisCategoryModel> categories;
 
-  AnalysisLoaded(this.categories);
+  AnalysisCategorySuccess(this.categories);
 }
 
-class AnalysisError extends AnalysisCategoryState {
+class AnalysisCategoryFailure extends AnalysisCategoryState {
   final String message;
 
-  AnalysisError(this.message);
+  AnalysisCategoryFailure(this.message);
 }

@@ -5,6 +5,7 @@ import 'package:medoraapp/features/analysis/data/service/analysis_service.dart';
 import 'package:medoraapp/features/analysis/logic/cubit/AnalysisCardCubit/analysis_card_cubit.dart';
 import 'package:medoraapp/features/analysis/logic/cubit/AnalysisCategoryCubit/analysis_category_cubit.dart';
 import 'package:medoraapp/features/analysis/presentation/view/AnalysisCardView/analysis_list_view.dart';
+import 'package:medoraapp/features/booking/logic/select_analysis/select_analysis_cubit.dart';
 
 class AnalysisListScopeView extends StatelessWidget {
   const AnalysisListScopeView({super.key});
@@ -23,6 +24,7 @@ class AnalysisListScopeView extends StatelessWidget {
                 AnalysisCubit(context.read<AnalysisService>())
                   ..fetchAllAnalyses(),
           ),
+          BlocProvider(create: (context) => SelectAnalysisCubit()),
 
           BlocProvider(
             create: (context) => AnalysisCategoryCubit(

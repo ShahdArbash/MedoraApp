@@ -108,7 +108,7 @@ class _OtpInputState extends State<OtpInput>
 
     widget.onChanged?.call(otp);
 
-    if (otp.length == widget.length && !otp.contains('')) {
+    if (controllers.every((controller) => controller.text.isNotEmpty)) {
       widget.onCompleted(otp);
     }
   }
@@ -132,8 +132,6 @@ class _OtpInputState extends State<OtpInput>
 
   @override
   Widget build(BuildContext context) {
-    final boxSize = MediaQuery.of(context).size.width / (widget.length * 1.3);
-
     return Directionality(
       textDirection: TextDirection.ltr,
       child: AnimatedBuilder(
@@ -141,63 +139,80 @@ class _OtpInputState extends State<OtpInput>
         builder: (context, child) {
           return Transform.translate(
             offset: Offset(_shakeAnimation.value, 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(widget.length, (index) {
-                return Container(
-                  width: boxSize.clamp(42, 55),
-                  height: 55,
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  child: TextField(
-                    controller: controllers[index],
-                    focusNode: focusNodes[index],
-                    keyboardType: TextInputType.number,
-                    textAlign: TextAlign.center,
-                    maxLength: 1,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                const itemSpacing = 8.0;
 
-                    // 🔥 مهم جداً لـ OTP auto-fill (Google / iOS SMS)
-                    autofillHints: const [AutofillHints.oneTimeCode],
+                final boxWidth =
+                    (constraints.maxWidth -
+                        (itemSpacing * (widget.length - 1))) /
+                    widget.length;
 
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                    ),
-
-                    decoration: InputDecoration(
-                      counterText: "",
-                      filled: true,
-                      fillColor: AppColors.fieldBackgroundColor,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(widget.length, (index) {
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        right: index == widget.length - 1 ? 0 : itemSpacing,
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(
-                          color: AppColors.primaryColor,
-                          width: 2,
+                      child: SizedBox(
+                        width: boxWidth.clamp(35.0, 55.0),
+                        height: 55,
+                        child: TextField(
+                          controller: controllers[index],
+                          focusNode: focusNodes[index],
+                          keyboardType: TextInputType.number,
+                          textAlign: TextAlign.center,
+                          maxLength: 1,
+                          autofillHints: const [AutofillHints.oneTimeCode],
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+
+                          decoration: InputDecoration(
+                            counterText: "",
+                            filled: true,
+                            fillColor: AppColors.fieldBackgroundColor,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: const BorderSide(
+                                color: AppColors.primaryColor,
+                                width: 2,
+                              ),
+                            ),
+                          ),
+
+                          onChanged: (value) => _handleInput(value, index),
+
+                          onTap: () {
+                            controllers[index].selection =
+                                TextSelection.fromPosition(
+                                  TextPosition(
+                                    offset: controllers[index].text.length,
+                                  ),
+                                );
+                          },
+
+                          onSubmitted: (_) {
+                            if (index < widget.length - 1) {
+                              focusNodes[index + 1].requestFocus();
+                            }
+                          },
                         ),
                       ),
-                    ),
-
-                    onChanged: (value) => _handleInput(value, index),
-
-                    onTap: () {
-                      controllers[index].selection = TextSelection.fromPosition(
-                        TextPosition(offset: controllers[index].text.length),
-                      );
-                    },
-
-                    onSubmitted: (_) {
-                      if (index < widget.length - 1) {
-                        focusNodes[index + 1].requestFocus();
-                      }
-                    },
-                  ),
+                    );
+                  }),
                 );
-              }),
+              },
             ),
           );
         },

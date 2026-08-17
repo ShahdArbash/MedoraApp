@@ -50,7 +50,6 @@ class BookAppointmentView extends StatelessWidget {
                     Text("اختر تاريخ لعرض الأوقات", style: CairoFonts.bold()),
 
                     const SizedBox(height: 16),
-
                     DatePickerField(
                       date: state is SlotsLoaded ? state.date : null,
                       onTap: () => pickDate(context),

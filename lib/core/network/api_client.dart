@@ -27,7 +27,6 @@ class ApiClient {
   }
   static const String _baseUrl =
       "https://legacy-cubical-swampland.ngrok-free.dev/api/";
-
   void _addInterceptors() {
     dio.interceptors.add(
       InterceptorsWrapper(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medoraapp/features/analysis/presentation/view/AnalysisCategoryView/analysis_scope.dart';
+import 'package:medoraapp/features/booking/presentation/view/select_analysis_scop.dart';
+import 'package:medoraapp/features/booking/presentation/view/select_analysis_view.dart';
 import 'package:medoraapp/features/lab_analysis/presentation/views/ocr_test_view.dart';
 import 'package:medoraapp/l10n/app_localizations.dart';
 import 'package:medoraapp/presentation/Widgets/Home_View_Widgets/service_tile.dart';
@@ -29,7 +31,12 @@ List<ServiceTile> getListServices(BuildContext context) {
     ServiceTile(
       title: AppLocalizations.of(context)!.bookAppointment,
       icon: Icons.calendar_month_rounded,
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => SelectAnalysisScope()),
+        );
+      },
     ),
   ];
 }

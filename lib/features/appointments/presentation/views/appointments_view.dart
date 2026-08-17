@@ -15,10 +15,15 @@ class AppointmentsView extends StatefulWidget {
 class _AppointmentsViewState extends State<AppointmentsView> {
   late final PageController _pageController;
 
+  AppointmentFilter _selectedFilter = AppointmentFilter.upcoming;
+
   @override
   void initState() {
-    _pageController = PageController();
     super.initState();
+
+    _pageController = PageController();
+
+    context.read<AppointmentsCubit>().getAppointments();
   }
 
   @override
@@ -27,49 +32,46 @@ class _AppointmentsViewState extends State<AppointmentsView> {
     super.dispose();
   }
 
+  void _changeTab(AppointmentFilter filter) {
+    final index = filter == AppointmentFilter.upcoming ? 0 : 1;
+
+    setState(() {
+      _selectedFilter = filter;
+    });
+
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AppointmentsCubit, AppointmentsState>(
-      listenWhen: (prev, curr) => curr is AppointmentsLoaded,
-      listener: (context, state) {
-        if (state is AppointmentsLoaded) {
-          final index = state.filter == AppointmentFilter.upcoming ? 0 : 1;
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(title: const Text("سجل المواعيد"), centerTitle: true),
+        body: Column(
+          children: [
+            TabsSection(selected: _selectedFilter, onChanged: _changeTab),
 
-          _pageController.animateToPage(
-            index,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        }
-      },
-      child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(title: const Text("سجل المواعيد"), centerTitle: true),
-          body: Column(
-            children: [
-              const TabsSection(),
-              Expanded(
-                child: PageView(
-                  controller: _pageController,
-
-                  onPageChanged: (index) {
-                    final cubit = context.read<AppointmentsCubit>();
-
-                    if (index == 0) {
-                      cubit.changeTab(AppointmentFilter.upcoming);
-                    } else {
-                      cubit.changeTab(AppointmentFilter.previous);
-                    }
-                  },
-
-                  children: const [
-                    AppointmentsList(type: AppointmentFilter.upcoming),
-                    AppointmentsList(type: AppointmentFilter.previous),
-                  ],
-                ),
+            Expanded(
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (index) {
+                  setState(() {
+                    _selectedFilter = index == 0
+                        ? AppointmentFilter.upcoming
+                        : AppointmentFilter.previous;
+                  });
+                },
+                children: const [
+                  AppointmentsList(type: AppointmentFilter.upcoming),
+                  AppointmentsList(type: AppointmentFilter.previous),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

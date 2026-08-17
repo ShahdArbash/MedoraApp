@@ -9,15 +9,19 @@ class AppointmentsInitial extends AppointmentsState {}
 class AppointmentsLoading extends AppointmentsState {}
 
 class AppointmentsLoaded extends AppointmentsState {
-  final List<AppointmentModel> appointments;
+  final List<AppointmentModel> upcoming;
+  final List<AppointmentModel> past;
   final AppointmentFilter filter;
 
-  AppointmentsLoaded(this.appointments, this.filter);
+  AppointmentsLoaded({
+    required this.upcoming,
+    required this.past,
+    required this.filter,
+  });
 }
-
-class AppointmentsEmpty extends AppointmentsState {}
 
 class AppointmentsError extends AppointmentsState {
   final String message;
+
   AppointmentsError(this.message);
 }

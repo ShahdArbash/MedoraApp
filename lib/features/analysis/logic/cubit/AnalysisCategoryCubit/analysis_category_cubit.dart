@@ -8,27 +8,28 @@ part 'analysis_category_state.dart';
 class AnalysisCategoryCubit extends Cubit<AnalysisCategoryState> {
   final AnalysisCategoryService service;
 
-  AnalysisCategoryCubit({required this.service}) : super(AnalysisInitial());
+  AnalysisCategoryCubit({required this.service})
+    : super(AnalysisCategoryInitial());
 
   Future<void> getCategories() async {
     if (isClosed) return;
 
-    emit(AnalysisLoading());
+    emit(AnalysisCategoryLoading());
 
     try {
       final data = await service.fetchCategories();
 
       if (isClosed) return;
 
-      emit(AnalysisLoaded(data));
+      emit(AnalysisCategorySuccess(data));
     } on ApiException catch (e) {
       if (isClosed) return;
 
-      emit(AnalysisError(e.userMessage));
+      emit(AnalysisCategoryFailure(e.userMessage));
     } catch (_) {
       if (isClosed) return;
 
-      emit(AnalysisError("Something went wrong"));
+      emit(AnalysisCategoryFailure("Something went wrong"));
     }
   }
 }

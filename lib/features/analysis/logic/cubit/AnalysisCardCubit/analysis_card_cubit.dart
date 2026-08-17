@@ -8,25 +8,39 @@ class AnalysisCubit extends Cubit<AnalysisState> {
 
   AnalysisCubit(this.service) : super(AnalysisInitial());
 
-  Future<void> fetchAllAnalyses() async {
+  bool _loaded = false;
+
+  Future<void> fetchAllAnalyses({bool forceRefresh = false}) async {
+    if (_loaded && !forceRefresh) return;
+
     emit(AnalysisLoading());
 
     try {
       final analyses = await service.fetchAllAnalyses();
 
+      if (isClosed) return;
+
+      _loaded = true;
+
       emit(AnalysisSuccess(analyses));
     } on ApiException catch (e) {
+      if (isClosed) return;
       emit(AnalysisError(e.userMessage));
     } catch (_) {
+      if (isClosed) return;
       emit(AnalysisError("Something went wrong"));
     }
   }
 
   Future<void> fetchAnalyses(int categoryId) async {
+    if (isClosed) return;
+
     emit(AnalysisLoading());
 
     try {
       final analyses = await service.fetchAnalysesByCategory(categoryId);
+
+      if (isClosed) return;
 
       if (analyses.isEmpty) {
         emit(AnalysisEmpty());
@@ -34,8 +48,12 @@ class AnalysisCubit extends Cubit<AnalysisState> {
         emit(AnalysisSuccess(analyses));
       }
     } on ApiException catch (e) {
+      if (isClosed) return;
+
       emit(AnalysisError(e.userMessage));
-    } catch (e) {
+    } catch (_) {
+      if (isClosed) return;
+
       emit(AnalysisError("حدث خطأ أثناء تحميل البيانات"));
     }
   }

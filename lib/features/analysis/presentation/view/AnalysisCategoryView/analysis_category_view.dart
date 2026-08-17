@@ -51,7 +51,7 @@ class _AnalysisCategoriesViewState extends State<AnalysisCategoriesView>
             Expanded(
               child: BlocBuilder<AnalysisCategoryCubit, AnalysisCategoryState>(
                 builder: (context, state) {
-                  if (state is AnalysisLoading) {
+                  if (state is AnalysisCategoryLoading) {
                     return Column(
                       children: const [
                         Expanded(child: AnalysisCategoryGridSkeleton()),
@@ -59,11 +59,11 @@ class _AnalysisCategoriesViewState extends State<AnalysisCategoriesView>
                     );
                   }
 
-                  if (state is AnalysisLoaded) {
+                  if (state is AnalysisCategorySuccess) {
                     return AnalysisCategoryGrid(categories: state.categories);
                   }
 
-                  if (state is AnalysisError) {
+                  if (state is AnalysisCategoryFailure) {
                     return Center(child: Text(state.message));
                   }
 
